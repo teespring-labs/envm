@@ -24,7 +24,7 @@ Or install it yourself as:
 require 'envm'
 
 # Configure the environment variable manifest file
-# Formatts supported: YML
+# Supported formats: YML
 Envm::Config.mainfest_path = File.join(Rails.root, "config", "env.yml")
 
 # you'll have to manually call setup
@@ -41,10 +41,6 @@ Envm["DATABASE_URLX"]
 # Access environment varables using Ruby's ENV
 ENV["DATABASE_URL"]
 # => STDERR.puts "Warning: deprecated usage of ENV with value 'DATABASE_URL'"
-
-# Setting environment varables using Ruby's ENV=
-ENV["DATABASE_URL"] = "mysql"
-# => STDERR.puts "Warning: deprecated usage of ENV= with value 'DATABASE_URL' and 'mysql'"
 ```
 
 ## License
