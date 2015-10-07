@@ -25,7 +25,10 @@ require 'envm'
 
 # Configure the environment variable manifest file
 # Formatts supported: YML
-Envm.mainfest_path = File.join(Rails.root, "config", "env.yml")
+Envm::Config.mainfest_path = File.join(Rails.root, "config", "env.yml")
+
+# you'll have to manually call setup
+Envm.setup
 
 # Access allowed environment varables
 Envm["DATABASE_URL"]
@@ -47,4 +50,3 @@ ENV["DATABASE_URL"] = "mysql"
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
