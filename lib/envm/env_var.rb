@@ -21,7 +21,7 @@ module Envm
       if required_environments.include?(Config.environment)
         system_value or fail(NotSetError, "'#{name}' environment variable was required but set on system.")
       else
-        default_value || system_value
+        system_value || default_value
       end
     end
 
