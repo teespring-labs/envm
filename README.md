@@ -38,10 +38,35 @@ Envm["DATABASE_URL"]
 Envm["DATABASE_URLX"]
 #=> fail Envm::EnvVarNotFoundError, "DATABASE_URLX was not found"
 
-# Access environment varables using Ruby's ENV
+# Access environment varables using built-in `ENV`
 ENV["DATABASE_URL"]
 # => STDERR.puts "Warning: deprecated usage of ENV with value 'DATABASE_URL'"
 ```
+
+## Environment Variable Manifest
+
+The best way to describe the manifest is to just show you:
+
+```yaml
+DATABASE_URL:
+  default: "mysql://app@localhost:3307/mydb"
+  required: true
+  description: "Connection string for the database"
+```
+
+The top level key `DATABASE_URL` is the environment variable name. It contains a few properties:
+
+**`default`**
+
+The value returned when this environment variable is not set on the system.
+
+**`description`**
+
+An optional property used to provide more insight about the environment variable.
+
+**`required`**
+
+An optional property used to determine whether this environment variable is required to be set on the system.
 
 ## License
 

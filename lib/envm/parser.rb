@@ -4,10 +4,6 @@ require "yaml"
 module Envm
   class ParserFactory
     def self.parser(filepath)
-      unless File.exist?(filepath)
-        fail FileNotFoundError, "#{filepath} does not exist."
-      end
-
       if filepath.include?(".yml")
         YamlParser.new(filepath)
       else
