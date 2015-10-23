@@ -7,7 +7,7 @@ Manage environment variables within your Ruby project
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'envm'
+gem 'envm', github: "teespring/envm"
 ```
 
 And then execute:
