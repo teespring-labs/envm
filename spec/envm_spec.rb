@@ -3,7 +3,7 @@ require 'envm'
 describe Envm do
   describe "[]" do
     before do
-      Envm::Config.mainfest_path = File.join(File.expand_path(__dir__), "fixtures", "env.yml")
+      Envm::Config.manifest_path = File.join(File.expand_path(__dir__), "fixtures", "env.yml")
       Envm.setup
     end
 
