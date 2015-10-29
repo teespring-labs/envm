@@ -24,7 +24,7 @@ module Envm
     end
 
     def self.parser
-      @_parser ||= ParserFactory.parser(Config.mainfest_path)
+      @_parser ||= ParserFactory.parser(Config.manifest_path)
     end
   end
 end

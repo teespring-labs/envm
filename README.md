@@ -25,7 +25,7 @@ require 'envm'
 
 # Configure the environment variable manifest file
 # Supported formats: YML
-Envm::Config.mainfest_path = File.join(Rails.root, "config", "env.yml")
+Envm::Config.manifest_path = File.join(Rails.root, "config", "env.yml")
 
 # you'll have to manually call setup
 Envm.setup

@@ -1,6 +1,6 @@
 describe Envm::ManifestLoader do
   before do
-    Envm::Config.mainfest_path = File.join(File.expand_path(__dir__), "..", "fixtures", "env.yml")
+    Envm::Config.manifest_path = File.join(File.expand_path(__dir__), "..", "fixtures", "env.yml")
   end
 
   describe '#load' do

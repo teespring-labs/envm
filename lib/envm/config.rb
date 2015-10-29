@@ -1,11 +1,11 @@
 module Envm
   class Config
-    def self.mainfest_path
-      @_mainfest_path.to_s
+    def self.manifest_path
+      @_manifest_path.to_s
     end
 
-    def self.mainfest_path=(path)
-      @_mainfest_path = path
+    def self.manifest_path=(path)
+      @_manifest_path = path
     end
 
     def self.environment
