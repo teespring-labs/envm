@@ -13,8 +13,8 @@ module Envm
         current_var = EnvVar.new(
             name: key,
             description: env_attrs["description"],
-            default_value: env_attrs["default"],
-            required: env_attrs["required"],
+            default_values: env_attrs["default"],
+            set_value_required: env_attrs["set_value_required"],
         )
 
         vars[key] = current_var
