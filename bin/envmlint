@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+
+usage = <<USAGE
+Usage: #{$PROGRAM_NAME} <options>
+
+Recursively checks for usage of "ENV" in all Ruby files of a directory, and prints a summary.
+By default, it will check all Ruby files in the current directory.
+
+Options:
+  --unhidden            Exclude hidden files and directories from search.
+  --files               Specify target file(s)/directories for search.
+  --help                Show this help message
+
+Check Ruby files within the current directory:
+  $ #{$PROGRAM_NAME}
+
+Check Ruby files within the current directory, excluding hidden directories and files:
+  $ #{$PROGRAM_NAME} --unhidden
+
+Check Ruby files in two locations:
+  $ #{$PROGRAM_NAME} --files config/initializers,config/otherfiles
+
+USAGE
+
+begin
+  if ARGV.include?('--help')
+    puts usage
+    exit
+  end
+
+  if ARGV.include?('--unhidden')
+    exclude_files = "--exclude=\".\" --exclude-dir=\"..\" "
+  else
+    exclude_files = ""
+  end
+
+  if ARGV.include?('--files')
+    file_list = ARGV[ARGV.index('--files') + 1].split(',')
+    files = String.new
+
+    file_list.each do |file|
+      files.concat("#{file} ")
+    end
+  else
+    files = "."
+  end
+
+  raw_data = `grep -rc --include=\*.rb --include=\*.erb #{exclude_files} "ENV\\[" #{files}`
+  data_array = raw_data.split("\n")
+  total_files = 0
+  occurrences = 0
+
+  puts "Usage of ENV[]:"
+  data_array.each do |line|
+    record = line.split(":")
+    filepath, count = record[0], record[1].to_i
+    if count > 0
+      puts "#{count} time(s) in #{filepath}"
+      total_files += 1
+      occurrences += count
+    end
+  end
+  puts "Total files: #{total_files}"
+  puts "Total occurrences: #{occurrences}"
+  puts "Files searched: #{data_array.size}"
+
+rescue => e
+  abort "An error occurred: #{e.message}."
+end
