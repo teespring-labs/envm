@@ -17,8 +17,12 @@ module Envm
       end
     end
 
+    def required?
+      required_environments.include?(Config.environment) || required_environments.include?(DEFAULT_ENV)
+    end
+
     def value
-      if required_environments.include?(Config.environment)
+      if required?
         system_value or fail(NotSetError, "'#{name}' environment variable was required but not set on system.")
       else
         system_value || default_value

@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+require_relative "../lib/envm.rb"
+
+usage = <<USAGE
+Usage: #{$PROGRAM_NAME} heroku_server manifest
+# <options>
+
+Compares manifest to ENV VARs that have been set, and returns list of missing variables.
+
+Options:
+  --manifest            Path to the manifest file
+  --environment         Which environment to verify (production, development, or staging)
+  --heroku_server              Heroku server whose set of ENV VARs will be checked
+  --help                Show this help message
+
+Check env vars set on teestaging7 against list of vars required for production environments, based on env_vars.yml manifest file
+$ #{$PROGRAM_NAME} --environment production --server teestaging7 --manifest config/env_vars.yml
+
+USAGE
+
+if ARGV.include?('--help')
+  puts usage
+  exit
+end
+
+
+if ARGV.include?('--environment')
+  env_type = ARGV[ARGV.index('--environment') + 1].downcase
+  if ['production', 'development', 'staging'].include?(env_type)
+    #somehow use to get required_vars
+  else
+    abort "Environment type not recognized; please specify production, staging, or development"
+  end
+end
+
+if ARGV.include?('--server')
+end
+
+Envm::Config.manifest_path = File.join(ARGV[1])
+missing_var_count = 0
+required_vars = Envm::Manifest.new.required_vars
+#Q: required_vars indirectly depends on Config.environment.  what if we want to specify environment
+
+required_vars.each do |name|
+  #Q:  Envm[name] this calls on ENV, but we haven't specified which heroku app to get the ENV values from
+  if Envm[name].nil?
+    puts "#{name} is required but not set on the server."
+    missing_var_count += 1
+  end
+end
+
+if missing_var_count == 0
+  puts "All required environment variables have been set."
+else
+  abort "There are #{missing_var_count} variables to be set."
+end

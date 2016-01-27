@@ -8,6 +8,10 @@ module Envm
       @env_vars = ManifestLoader.load
     end
 
+    def required_vars
+      @env_vars.values.select(&:required?).map(&:name)
+    end
+
     def fetch(name)
       env_var = @env_vars.fetch(name)
       env_var.value
