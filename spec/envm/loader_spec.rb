@@ -4,8 +4,10 @@ describe Envm::ManifestLoader do
   end
 
   describe '#load' do
+    let(:env) { ENV }
+
     it 'returns key value of vars' do
-      loaded_vars = described_class.load
+      loaded_vars = described_class.load(env)
       expect(loaded_vars["DATABASE_URL"]).to_not be_nil
       expect(loaded_vars["AWS_ACCESS_KEY_ID"]).to_not be_nil
 

@@ -2,12 +2,13 @@ require "envm/config"
 
 module Envm
   class EnvVar
-    attr_accessor :name, :description, :default_value, :required_environments
+    attr_accessor :name, :description, :default_value, :required_environments, :env
 
-    def initialize(name:, description: nil, default_value: nil, required: [])
+    def initialize(name:, description: nil, default_value: nil, required: [], env: ENV)
       self.name = name
       self.description = description
       self.default_value = default_value
+      self.env = env
 
       if required.respond_to?(:include?)
         self.required_environments = required

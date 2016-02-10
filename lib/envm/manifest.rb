@@ -4,8 +4,9 @@ require "envm/env_var"
 
 module Envm
   class Manifest
-    def initialize
-      @env_vars = ManifestLoader.load
+    def initialize(env = ENV)
+      @env_vars = ManifestLoader.load(env)
+    end
     end
 
     def fetch(name)
