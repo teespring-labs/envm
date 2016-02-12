@@ -3,7 +3,7 @@ require "envm/parser"
 
 module Envm
   class ManifestLoader
-    def self.load
+    def self.load(env)
       contents = parser.parse
 
       vars = {}
@@ -15,6 +15,7 @@ module Envm
             description: env_attrs["description"],
             default_value: env_attrs["default"],
             required: env_attrs["required"],
+            env: env,
         )
 
         vars[key] = current_var
