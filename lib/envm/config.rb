@@ -1,19 +1,17 @@
 module Envm
   class Config
-    def self.manifest_path
-      @_manifest_path.to_s
+    attr_accessor :environment, :manifest_path, :secret_environments
+
+    def environment
+      @environment || ENV['RAILS_ENV'] || ENV['RACK_ENV']
     end
 
-    def self.manifest_path=(path)
-      @_manifest_path = path
+    def secret_environments
+      @secret_environments ||= ['production', 'staging']
     end
 
-    def self.environment
-      @_environment || DEFAULT_ENV
-    end
-
-    def self.environment=(env)
-      @_environment = env
+    def secret_environment?
+      secret_environments.include?(environment)
     end
   end
 end

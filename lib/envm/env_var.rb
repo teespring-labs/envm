@@ -2,40 +2,26 @@ require "envm/config"
 
 module Envm
   class EnvVar
-    attr_accessor :name, :description, :default_value, :required_environments, :env
+    attr_accessor :name, :default, :secret
 
-    def initialize(name:, description: nil, default_value: nil, required: [], env: ENV)
+    def initialize(name:, default: nil, secret: false)
       self.name = name
-      self.description = description
-      self.default_value = default_value
-      self.env = env
-
-      if required.respond_to?(:include?)
-        self.required_environments = required
-      else
-        self.required_environments = []
-        self.required_environments << DEFAULT_ENV if required
-      end
+      self.default = default
+      self.secret = secret
     end
 
-    def required?
-      required_environments.include?(Config.environment)
-    end
-
-    def missing?
-      system_value.nil?
+    def secret?
+      secret
     end
 
     def value
-      if required? && missing?
-        fail(NotSetError, "'#{name}' environment variable was required but not set on system.")
-      end
-
-      system_value || default_value
+      system_value || default
     end
 
+    private
+
     def system_value
-      env[name]
+      ENV[name]
     end
   end
 end

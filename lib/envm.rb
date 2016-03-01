@@ -1,13 +1,28 @@
-require "envm/version"
-require "envm/manifest"
+require 'envm/version'
+require 'envm/error'
+require 'envm/config'
+require 'envm/loader'
 
 module Envm
-  DEFAULT_ENV = "default"
-
   extend self
 
   def setup
-    @manifest = Manifest.new
+    config = Envm::Config.new
+
+    if block_given?
+      yield(config)
+    end
+
+    if config.manifest_path.nil?
+      fail Envm::EnvmError, 'Manifest not configured'
+    end
+
+    unless File.exist?(config.manifest_path)
+      fail Envm::FileNotFoundError, "#{config.manifest_path} was not found"
+    end
+
+    loader = Loader.new(config)
+    @manifest = loader.load
   end
 
   def [](name)

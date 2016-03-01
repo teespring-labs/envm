@@ -1,74 +1,50 @@
 require 'spec_helper'
 
 describe Envm::EnvVar do
-  describe "#required_and_missing?" do
-    let(:env) { {} }
+  describe "#secret?" do
+    context "when secret was not set" do
+      subject { described_class.new(name: 'FOO', secret: true) }
 
-    subject(:env_var) do
-      described_class.new(
-        name: 'A_KEY',
-        required: required_environments,
-        env: env,
-      )
-    end
-
-    before do
-      Envm::Config.environment = "test_env"
-    end
-
-    after do
-      Envm::Config.environment = nil
-    end
-
-    context "when the required enviroment matches the Config.environment" do
-      let(:required_environments) { ["test_env"] }
-
-      context "when the key is missing from the ENV hash" do
-        it "should be required" do
-          expect(env_var).to be_required
-        end
-
-        it "should be missing" do
-          expect(env_var).to be_missing
-        end
-      end
-
-      context "when the key is present from the ENV hash" do
-        let(:env) { { 'A_KEY' => "present" } }
-
-        it "should be required" do
-          expect(env_var).to be_required
-        end
-
-        it "should not be missing" do
-          expect(env_var).to_not be_missing
-        end
+      it 'returns true' do
+        expect(subject).to be_secret
       end
     end
 
-    context "when the required enviroment does not matches the Config.environment" do
-      let(:required_environments) { ["another_env"] }
+    context "when secret was not set" do
+      subject { described_class.new(name: 'FOO') }
 
-      context "when the key is missing from the ENV hash" do
-        it "should not be required" do
-          expect(env_var).to_not be_required
-        end
+      it 'returns false' do
+        expect(subject).to_not be_secret
+      end
+    end
+  end
 
-        it "should be missing" do
-          expect(env_var).to be_missing
-        end
+  describe "#value" do
+    subject do
+      described_class.new(name: 'FOO', default: 'baz')
+    end
+
+    context "when set on system" do
+      before do
+        ENV['FOO'] = 'bar'
       end
 
-      context "when the key is present from the ENV hash" do
-        let(:env) { { 'A_KEY' => "present" } }
+      after do
+        ENV['FOO'] = nil
+      end
 
-        it "should not be required" do
-          expect(env_var).to_not be_required
-        end
+      it "returns system value" do
+        expect(subject.value).to eq('bar')
+      end
+    end
 
-        it "should not be missing" do
-          expect(env_var).to_not be_missing
-        end
+    context "when not set on system" do
+      before do
+        ENV['FOO'] = nil
+      end
+
+      it "returns default value" do
+        expect(subject.value).to eq('baz')
       end
     end
   end
