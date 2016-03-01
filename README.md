@@ -1,6 +1,6 @@
 # Envm
 
-Manage environment variables within your Ruby project
+Environment variable management for large Ruby projects
 
 ## Installation
 
@@ -20,29 +20,48 @@ Or install it yourself as:
 
 ## Usage
 
+Setup
+
 ```ruby
-require 'envm'
-
 # Configure the environment variable manifest file
-# Supported formats: YML
-Envm::Config.manifest_path = File.join(Rails.root, "config", "env.yml")
+Envm.manifest_path = File.join(Rails.root, "config", "env.yml")
 
-# you'll have to manually call setup
+# Set current enviroment (uses value from env var: RAILS_ENV or RACK_ENV by default)
+Envm.environment = 'development'
+
+# Call setup to initialize Envm
 Envm.setup
+```
 
-# Access allowed environment varables
+Access registered environment varable
+
+```ruby
 Envm["DATABASE_URL"]
 #=> "mysql2://root@localhost:3306/teespring_dev"
+```
 
-# Access disallowed environment varables
+Accessing unregistered environment varable will raise an error
+
+```ruby
 Envm["DATABASE_URLX"]
 #=> fail Envm::EnvVarNotFoundError, "DATABASE_URLX was not found"
-
-# Access environment varables using Ruby's ENV
-ENV["DATABASE_URL"]
-# => STDERR.puts "Warning: deprecated usage of ENV with value 'DATABASE_URL'"
 ```
+
+If you wish to use multiple manifests you can
+
+```ruby
+envm1 = Envm.setup do |c|
+  c.manifest_path = File.join(Rails.root, "config", "env1.yml")
+  c.environment = 'production'
+end
+
+envm1['DATABASE_URL']
+```
+
+## Manifest
+
+The manifest file is documented in the [MANIFEST.md](MANIFEST.md)
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT)
